@@ -1,0 +1,105 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: mathfunctions-api
+    env: sandbox
+    package: deployment-3
+    provisioned_by: kcc
+  name: mathfunctions-api
+  namespace: mathgarage
+spec:
+  ports:
+  - port: 80
+    targetPort: 8080
+  selector:
+    app: mathfunctions-api
+    env: sandbox
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mathfunctions-api
+    env: sandbox
+    package: deployment-3
+    provisioned_by: kcc
+  name: mathfunctions-api
+  namespace: mathgarage
+spec:
+  selector:
+    matchLabels:
+      app: mathfunctions-api
+      env: sandbox
+  template:
+    metadata:
+      labels:
+        app: mathfunctions-api
+        env: sandbox
+        package: deployment-3
+        provisioned_by: kcc
+    spec:
+      containers:
+      - envFrom: null
+        image: docker.io/jaichenchlani/mathfunctions:0.1
+        name: mathfunctions-api
+        ports:
+        - containerPort: 8080
+          name: web-0
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 50m
+            memory: 256Mi
+          requests:
+            cpu: 25m
+            memory: 128Mi
+      nodeSelector:
+        iam.gke.io/gke-metadata-server-enabled: "true"
+---
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  labels:
+    app: mathfunctions-api
+    env: sandbox
+    package: deployment-3
+    provisioned_by: kcc
+  name: mathfunctions-api
+  namespace: mathgarage
+spec:
+  maxReplicas: 5
+  metrics:
+  - resource:
+      name: cpu
+      targetAverageUtilization: 80
+    type: Resource
+  minReplicas: 2
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: mathfunctions-api
+---
+apiVersion: monitoring.googleapis.com/v1
+kind: PodMonitoring
+metadata:
+  labels:
+    app: mathfunctions-api
+    env: sandbox
+    package: deployment-3
+    provisioned_by: kcc
+  name: mathfunctions-api
+  namespace: mathgarage
+spec:
+  endpoints:
+  - interval: 30s
+    port: metrics
+  - interval: 10s
+    path: /stats/prometheus
+    port: 15020
+    scheme: http
+  selector:
+    matchLabels:
+      app: mathfunctions-api
+      env: sandbox

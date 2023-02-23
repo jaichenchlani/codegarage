@@ -1,0 +1,114 @@
+apiVersion: v1
+data:
+  CONFIGMAP_ENV1: configmap_env1
+  CONFIGMAP_ENV2: configmap_env2
+kind: ConfigMap
+metadata:
+  labels:
+    app: gke-template
+    env: sandbox
+    package: deployment-3
+    provisioned_by: kcc
+  name: gke-template-config
+  namespace: sample
+---
+apiVersion: v1
+data:
+  MYSQL_ROOT_PASSWORD: cGFzc3dvcmQK
+kind: Secret
+metadata:
+  labels:
+    app: gke-template
+    env: sandbox
+    package: deployment-3
+    provisioned_by: kcc
+  name: gke-template-secret
+  namespace: sample
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: gke-template
+    env: sandbox
+    package: deployment-3
+    provisioned_by: kcc
+  name: gke-template
+  namespace: sample
+spec:
+  ports:
+  - port: 80
+    targetPort: 8080
+  selector:
+    app: gke-template
+    env: sandbox
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: gke-template
+    env: sandbox
+    package: deployment-3
+    provisioned_by: kcc
+  name: gke-template
+  namespace: sample
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gke-template
+      env: sandbox
+  template:
+    metadata:
+      labels:
+        app: gke-template
+        env: sandbox
+        package: deployment-3
+        provisioned_by: kcc
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: gke-template-config
+        - secretRef:
+            name: gke-template-secret
+        image: docker.io/jaichenchlani/gke-template:0.3
+        name: gke-template
+        ports:
+        - containerPort: 8080
+          name: http-0
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 10m
+            memory: 128Mi
+          requests:
+            cpu: 5m
+            memory: 32Mi
+      nodeSelector:
+        iam.gke.io/gke-metadata-server-enabled: "true"
+---
+apiVersion: monitoring.googleapis.com/v1
+kind: PodMonitoring
+metadata:
+  labels:
+    app: gke-template
+    env: sandbox
+    package: deployment-3
+    provisioned_by: kcc
+  name: gke-template
+  namespace: sample
+spec:
+  endpoints:
+  - interval: 30s
+    port: metrics
+  - interval: 10s
+    path: /stats/prometheus
+    port: 15020
+    scheme: http
+  selector:
+    matchLabels:
+      app: gke-template
+      env: sandbox

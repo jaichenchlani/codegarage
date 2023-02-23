@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: prometheus
+    env: sandbox
+    package: prometheus
+    provisioned_by: kcc
+  name: prometheus
+  namespace: monitoring
+spec:
+  ports:
+  - name: web
+    port: 80
+    targetPort: 9090
+  selector:
+    app: prometheus
+  spec: null
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: prometheus
+    env: sandbox
+    package: prometheus
+    provisioned_by: kcc
+  name: prometheus
+  namespace: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      automountServiceAccountToken: true
+      containers:
+      - args:
+        - --web.listen-address=:9090
+        - --query.project-id=us-gcp-ame-con-vvuud-sbx-1
+        image: gke.gcr.io/prometheus-engine/frontend:v0.5.0-gke.0
+        livenessProbe:
+          httpGet:
+            path: /-/healthy
+            port: web
+        name: prometheus
+        ports:
+        - containerPort: 9090
+          name: web
+        readinessProbe:
+          httpGet:
+            path: /-/ready
+            port: web
+      nodeSelector:
+        kubernetes.io/arch: amd64
+        kubernetes.io/os: linux
+      serviceAccountName: ksa-monitoring
