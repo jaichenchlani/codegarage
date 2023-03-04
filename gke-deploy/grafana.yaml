@@ -41,7 +41,7 @@ spec:
         provisioned_by: kcc
     spec:
       containers:
-      - image: grafana/grafana:latest
+      - image: docker.io/jaichenchlani/grafana:0.21
         name: grafana
         ports:
         - containerPort: 3000
@@ -59,7 +59,9 @@ spec:
           name: cme-pv
       nodeSelector:
         iam.gke.io/gke-metadata-server-enabled: "true"
-      serviceAccountName: ksa-monitoring
+      securityContext:
+        runAsUser: 0
+      serviceAccountName: ksa-monitoring4
       volumes:
       - name: cme-pv
         persistentVolumeClaim:
