@@ -15,13 +15,23 @@ Steps below outline the initialization process for a new GCP Free Tier Account
     FROM `codegarage-377302.billing.gcp_billing_export_v1_0180BE_F4324C_CAFD43` 
     GROUP BY project, resource
     ORDER BY cost DESC```
-5. Run the Start Script - pass project_id as argument.
-`./startup.sh $project_id`
-    1. Enable Kubernetes Engine API
-    2. Create Kubernetes Cluster
-    3. Connect to the cluster
-    4. Create the 3 namespaces - mathgarage, sample and monitoring
-    5. Deploy Apps
-6. Run Grafana using the Grafana Service endpoint.
-7. Add Prometheus Datasource
-8. Import the Cluster and App Dashboards.
+5. Setup
+    - Review the ***Declare Variables*** in each script, and ensure that you are purposeful about the values declared.
+    - Run `./create_cluster.sh $project_id`
+        1. Enable Kubernetes Engine API
+        2. Create Kubernetes Cluster
+        3. Connect to the cluster
+        4. Create the 4 namespaces - mathgarage, sample, monitoring and ingress-space with labels istio-injection=enabled.
+    - Install Istio `/Users/jai/mydata/technical/asm/istio-1.16.2-asm.2/bin/istioctl` **manual**
+    - Run `./setup_workload_identity.sh $project_id` to setup Workload Identity
+    - Deploy Apps
+        1. ***Review the grafana and prometheus yamls for the correct service accounts and project id. If this is not accurate, you will run into 403 forbidden issues. ***
+        2. Run `./deploy_apps.sh` to deploy all the demo apps 
+6. Validate all the workloads and services are up and running.
+7. Setup Grafana
+    1. Add Data Sources
+        - Prometheus : http://<external-ip>:80
+        - Google Cloud Monitoring: Use JWT of the gsa-monitoring service account
+    2. Import [gke_customized_dashboard_codegarage](../observability/gke_customized_dashboard_codegarage.json)
+8. Run Load Test Automation to induce traffic.
+9 Validate traffic showing up on the Grafana Dashboard. 

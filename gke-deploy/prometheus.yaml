@@ -42,7 +42,7 @@ spec:
       containers:
       - args:
         - --web.listen-address=:9090
-        - --query.project-id=us-gcp-ame-con-vvuud-sbx-1
+        - --query.project-id=codegarage-377302
         image: gke.gcr.io/prometheus-engine/frontend:v0.5.0-gke.0
         livenessProbe:
           httpGet:

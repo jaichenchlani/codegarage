@@ -54,18 +54,11 @@ spec:
           requests:
             cpu: 50m
             memory: 128Mi
-        volumeMounts:
-        - mountPath: /data/grafana
-          name: cme-pv
       nodeSelector:
         iam.gke.io/gke-metadata-server-enabled: "true"
       securityContext:
         runAsUser: 0
       serviceAccountName: ksa-monitoring4
-      volumes:
-      - name: cme-pv
-        persistentVolumeClaim:
-          claimName: monitoring-pvc
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
