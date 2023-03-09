@@ -58,7 +58,7 @@ spec:
         iam.gke.io/gke-metadata-server-enabled: "true"
       securityContext:
         runAsUser: 0
-      serviceAccountName: ksa-monitoring4
+      serviceAccountName: ksa-monitoring5
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService

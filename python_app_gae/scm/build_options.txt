@@ -1,0 +1,6 @@
+pipelineType=build_container_image
+notificationEmail=jaichenchlani@gmail.com
+dockerFileDirectory=src
+projectId=tokyo-flames-342920
+appName=app1
+appVersion=v0.3
