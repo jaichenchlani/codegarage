@@ -5,11 +5,11 @@ data:
 kind: ConfigMap
 metadata:
   labels:
-    app: gke-template
+    app: flask-template
     env: sandbox
     package: deployment-3
     provisioned_by: kcc
-  name: gke-template-config
+  name: flask-template-config
   namespace: sample
 ---
 apiVersion: v1
@@ -18,29 +18,29 @@ data:
 kind: Secret
 metadata:
   labels:
-    app: gke-template
+    app: flask-template
     env: sandbox
     package: deployment-3
     provisioned_by: kcc
-  name: gke-template-secret
+  name: flask-template-secret
   namespace: sample
 ---
 apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: gke-template
+    app: flask-template
     env: sandbox
     package: deployment-3
     provisioned_by: kcc
-  name: gke-template
+  name: flask-template
   namespace: sample
 spec:
   ports:
   - port: 80
     targetPort: 8080
   selector:
-    app: gke-template
+    app: flask-template
     env: sandbox
   type: LoadBalancer
 ---
@@ -48,22 +48,22 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: gke-template
+    app: flask-template
     env: sandbox
     package: deployment-3
     provisioned_by: kcc
-  name: gke-template
+  name: flask-template
   namespace: sample
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: gke-template
+      app: flask-template
       env: sandbox
   template:
     metadata:
       labels:
-        app: gke-template
+        app: flask-template
         env: sandbox
         package: deployment-3
         provisioned_by: kcc
@@ -71,11 +71,11 @@ spec:
       containers:
       - envFrom:
         - configMapRef:
-            name: gke-template-config
+            name: flask-template-config
         - secretRef:
-            name: gke-template-secret
-        image: docker.io/jaichenchlani/gke-template:0.3
-        name: gke-template
+            name: flask-template-secret
+        image: docker.io/jaichenchlani/flask-template:0.1
+        name: flask-template
         ports:
         - containerPort: 8080
           name: http-0
@@ -94,11 +94,11 @@ apiVersion: monitoring.googleapis.com/v1
 kind: PodMonitoring
 metadata:
   labels:
-    app: gke-template
+    app: flask-template
     env: sandbox
     package: deployment-3
     provisioned_by: kcc
-  name: gke-template
+  name: flask-template
   namespace: sample
 spec:
   endpoints:
@@ -110,5 +110,5 @@ spec:
     scheme: http
   selector:
     matchLabels:
-      app: gke-template
+      app: flask-template
       env: sandbox
