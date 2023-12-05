@@ -45,16 +45,4 @@ e_bold "$count) Connect to the GKE Cluster $cluster_name..."
 gcloud container clusters get-credentials $cluster_name --zone $zone --project $project_id
 check_previous_command_status
 
-let "count++" # Increment the counter
-e_bold "$count) Create Namespaces..."
-
-for ns in {mathgarage,sample,monitoring,ingress-space}
-do 
-    e_note "    Creating Namespace $ns..."
-    kubectl create namespace $ns
-    check_previous_command_status
-    kubectl label namespace $ns istio-injection=enabled
-    check_previous_command_status
-done
-
 e_bold "Cluster $cluster_name created successfully."

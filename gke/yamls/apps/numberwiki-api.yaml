@@ -2,18 +2,18 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: mathfunctions-api
+    app: numberwiki-api
     env: sandbox
     package: deployment-3
     provisioned_by: kcc
-  name: mathfunctions-api
+  name: numberwiki-api
   namespace: mathgarage
 spec:
   ports:
   - port: 80
-    targetPort: 8080
+    targetPort: 8081
   selector:
-    app: mathfunctions-api
+    app: numberwiki-api
     env: sandbox
   type: LoadBalancer
 ---
@@ -21,31 +21,31 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: mathfunctions-api
+    app: numberwiki-api
     env: sandbox
     package: deployment-3
     provisioned_by: kcc
-  name: mathfunctions-api
+  name: numberwiki-api
   namespace: mathgarage
 spec:
   selector:
     matchLabels:
-      app: mathfunctions-api
+      app: numberwiki-api
       env: sandbox
   template:
     metadata:
       labels:
-        app: mathfunctions-api
+        app: numberwiki-api
         env: sandbox
         package: deployment-3
         provisioned_by: kcc
     spec:
       containers:
       - envFrom: null
-        image: docker.io/jaichenchlani/mathfunctions:0.1
-        name: mathfunctions-api
+        image: docker.io/jaichenchlani/numberwiki:0.1
+        name: numberwiki-api
         ports:
-        - containerPort: 8080
+        - containerPort: 8081
           name: web-0
           protocol: TCP
         resources:
@@ -58,38 +58,44 @@ spec:
       nodeSelector:
         iam.gke.io/gke-metadata-server-enabled: "true"
 ---
-apiVersion: autoscaling/v2beta1
+apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   labels:
-    app: mathfunctions-api
+    app: numberwiki-api
     env: sandbox
     package: deployment-3
     provisioned_by: kcc
-  name: mathfunctions-api
+  name: numberwiki-api
   namespace: mathgarage
 spec:
   maxReplicas: 5
   metrics:
-  - resource:
-      name: cpu
-      targetAverageUtilization: 80
-    type: Resource
+  - type: Object
+    object:
+      describedObject:
+        kind: Service
+        name: store-autoscale
+      metric:
+        name: "autoscaling.googleapis.com|gclb-capacity-utilization"
+      target:
+        averageValue: 80
+        type: AverageValue
   minReplicas: 2
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: mathfunctions-api
+    name: numberwiki-api
 ---
 apiVersion: monitoring.googleapis.com/v1
 kind: PodMonitoring
 metadata:
   labels:
-    app: mathfunctions-api
+    app: numberwiki-api
     env: sandbox
     package: deployment-3
     provisioned_by: kcc
-  name: mathfunctions-api
+  name: numberwiki-api
   namespace: mathgarage
 spec:
   endpoints:
@@ -101,5 +107,5 @@ spec:
     scheme: http
   selector:
     matchLabels:
-      app: mathfunctions-api
+      app: numberwiki-api
       env: sandbox

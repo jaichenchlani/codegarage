@@ -22,7 +22,8 @@ Steps below outline the initialization process for a new GCP Free Tier Account
         2. Create Kubernetes Cluster
         3. Connect to the cluster
         4. Create the 4 namespaces - mathgarage, sample, monitoring and ingress-space with labels istio-injection=enabled.
-    - Install Istio `/Users/jai/mydata/technical/asm/istio-1.16.2-asm.2/bin/istioctl` **manual**
+            - run `kubectl apply -f ns.yaml` or `kaf ns.yaml` # kaf is the alias
+    - Install Istio `/Users/jai/mydata/technical/asm/istio-1.16.2-asm.2/bin/istioctl` This step is not needed if you are using an auto pilot cluster
     - Run `./setup_workload_identity.sh $project_id` to setup Workload Identity
     - Deploy Apps
         1. ***Review the grafana and prometheus yamls for the correct service accounts and project id. If this is not accurate, you will run into 403 forbidden issues. ***

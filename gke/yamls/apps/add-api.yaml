@@ -58,7 +58,7 @@ spec:
       nodeSelector:
         iam.gke.io/gke-metadata-server-enabled: "true"
 ---
-apiVersion: autoscaling/v2beta1
+apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   labels:
@@ -71,10 +71,21 @@ metadata:
 spec:
   maxReplicas: 5
   metrics:
-  - resource:
-      name: cpu
-      targetAverageUtilization: 80
-    type: Resource
+  - type: Object
+    object:
+      describedObject:
+        kind: Service
+        name: store-autoscale
+      metric:
+        name: "autoscaling.googleapis.com|gclb-capacity-utilization"
+      target:
+        averageValue: 80
+        type: AverageValue
+  # metrics:
+  # - resource:
+  #     name: cpu
+  #     targetAverageUtilization: 80
+    # type: Resource
   minReplicas: 2
   scaleTargetRef:
     apiVersion: apps/v1

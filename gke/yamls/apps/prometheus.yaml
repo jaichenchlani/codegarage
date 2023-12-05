@@ -15,7 +15,6 @@ spec:
     targetPort: 9090
   selector:
     app: prometheus
-  spec: null
   type: LoadBalancer
 ---
 apiVersion: apps/v1
@@ -59,4 +58,4 @@ spec:
       nodeSelector:
         kubernetes.io/arch: amd64
         kubernetes.io/os: linux
-      serviceAccountName: ksa-monitoring4
+      serviceAccountName: ksa-monitoring

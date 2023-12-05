@@ -1,6 +1,8 @@
 #!/bin/bash
 
-# Deploy Apps
+# 1. Create Namespaces
+# 1. Deploy Apps
+
 # SAMPLE Namespace:
 #   1. hello-world-api.yaml
 #   2. gke-template.yaml
@@ -18,15 +20,15 @@
 # Source Bash Config and Utilities
 source $SRE/automation/load_bash_config_and_utilities.sh
 
+# Create Namespaces
+kubectl apply -f ../yamls/ns/ns.yaml
+check_previous_command_status
+
 # Initialize the counter
 count=0
 
-# Navigate to the gke-deploy dir
-cd $CODEGARAGE/gke-deploy
-check_previous_command_status
-
-# Iterate through all the yaml config file sin gke-deploy folder
-for file in $(ls); 
+# Iterate through all the yaml config files in gke/yamls/apps folder
+for file in $(ls ../yamls/apps); 
 do 
     let "count++" # Increment the counter
     e_bold "$count) Deploying $file..."
