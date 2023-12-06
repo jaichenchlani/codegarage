@@ -1,0 +1,23 @@
+project_id="codegarage-001"
+zone="us-east1-b"
+machine_type="n1-standard-1"
+scopes="https://www.googleapis.com/auth/cloud-platform"
+debian_image="projects/debian-cloud/global/images/debian-11-bullseye-v20230306"
+centos_image="projects/centos-cloud/global/images/centos-7-v20230306"
+ni_external_ip="network-tier=PREMIUM,subnet=default"  
+
+### Webserver Configuration Files Location
+webserve_centos_config_files="gs://codegarage-001-app-config-files-001/webserver-centos"
+webserve_debian_config_files="gs://codegarage-001-app-config-files-001/webserver-debian"
+
+### VM Names
+vm_name_webserver_apache_centos="webserver-apache-centos"
+vm_name_webserver_apache_debian="webserver-apache-debian"
+vm_name_grafana="webserver-grafana"
+vm_name_sreterminal="bastion-host-sreterminal"
+
+### Startup Scripts
+webserver_apache_centos_startup_script="startup_scripts/webserver_apache_centos7.sh"
+webserver_apache_debian_startup_script="startup_scripts/webserver_apache_debian11.sh"
+webserver_grafana_startup_script="startup_scripts/webserver_grafana.sh"
+sreterminal_startup_script="startup_scripts/sreterminal.sh"
