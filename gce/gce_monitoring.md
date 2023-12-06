@@ -1,6 +1,6 @@
 # GCE Monitoring Info
 
-## Legacy Agent 
+## Legacy Agent (In use by CentOS webserver)
 THIS IS NOT RECOMMEDED. Google recommendation is to use Ops Agent.
 https://cloud.google.com/logging/docs/agent/logging/installation
 1. `sudo curl -sSO https://dl.google.com/cloudagents/add-logging-agent-repo.sh`
@@ -9,7 +9,7 @@ https://cloud.google.com/logging/docs/agent/logging/installation
 4. `sudo yum install -y google-fluentd-catch-all-config-structured`
 5. `sudo service google-fluentd restart`
 
-## Ops Agent 
+## Ops Agent (In use by Debian webserver)
 Installing the monitoring agent
 https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/installation#agent-version-debian-ubuntu
 https://cloud.google.com/logging/docs/agent/ops-agent/third-party/apache
