@@ -22,8 +22,8 @@ e_bold "$count) Declare Variables..."
 # Declare variables
 project_id=$1 #Project ID from the argument
 cluster_name=sre
-ksa=ksa-monitoring5 # Kubernetes Service Account
-gsa=gsa-monitoring5 # IAM Service Account
+ksa=ksa-monitoring # Kubernetes Service Account
+gsa=gsa-monitoring # IAM Service Account
 check_previous_command_status
 
 let "count++" # Increment the counter
